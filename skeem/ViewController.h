@@ -8,6 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UIPickerViewDataSource,UIPickerViewDelegate>
+
+
+@property (strong, nonatomic) IBOutlet UIDatePicker *dobUIDatePickerView;
+@property (strong, nonatomic) IBOutlet UIPickerView *sexUIPickerView;
+@property (strong, nonatomic) NSArray *sexArray;
+@property (strong, nonatomic) IBOutlet UIButton *doneUIButton;
+
 
 @end
