@@ -24,6 +24,17 @@
 		E34C346317F209E600E784DF /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C346217F209E600E784DF /* MainMenuViewController.m */; };
 		E34C346617F2198200E784DF /* NewUserNavViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C346517F2198200E784DF /* NewUserNavViewController.m */; };
 		E34C346917F2230900E784DF /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C346817F2230900E784DF /* MapViewController.m */; };
+		E3E228B917F4E4B300E04609 /* EditUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E228B817F4E4B300E04609 /* EditUserViewController.m */; };
+		E3E228BB17F7934100E04609 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228BA17F7934100E04609 /* Parse.framework */; };
+		E3E228BD17F793B100E04609 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228BC17F793B100E04609 /* AudioToolbox.framework */; };
+		E3E228BF17F793BA00E04609 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228BE17F793BA00E04609 /* CFNetwork.framework */; };
+		E3E228C117F793CE00E04609 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228C017F793CE00E04609 /* CoreLocation.framework */; };
+		E3E228C317F793E100E04609 /* libz.1.1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228C217F793E100E04609 /* libz.1.1.3.dylib */; };
+		E3E228C517F7940000E04609 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228C417F7940000E04609 /* MobileCoreServices.framework */; };
+		E3E228C717F7941200E04609 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228C617F7941200E04609 /* QuartzCore.framework */; };
+		E3E228C917F7941E00E04609 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228C817F7941E00E04609 /* Security.framework */; };
+		E3E228CB17F7942500E04609 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228CA17F7942500E04609 /* StoreKit.framework */; };
+		E3E228CD17F7942E00E04609 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228CC17F7942E00E04609 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +73,18 @@
 		E34C346517F2198200E784DF /* NewUserNavViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewUserNavViewController.m; sourceTree = "<group>"; };
 		E34C346717F2230900E784DF /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		E34C346817F2230900E784DF /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		E3E228B717F4E4B300E04609 /* EditUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditUserViewController.h; sourceTree = "<group>"; };
+		E3E228B817F4E4B300E04609 /* EditUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditUserViewController.m; sourceTree = "<group>"; };
+		E3E228BA17F7934100E04609 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		E3E228BC17F793B100E04609 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		E3E228BE17F793BA00E04609 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		E3E228C017F793CE00E04609 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		E3E228C217F793E100E04609 /* libz.1.1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.1.3.dylib; path = usr/lib/libz.1.1.3.dylib; sourceTree = SDKROOT; };
+		E3E228C417F7940000E04609 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		E3E228C617F7941200E04609 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		E3E228C817F7941E00E04609 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		E3E228CA17F7942500E04609 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		E3E228CC17F7942E00E04609 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,8 +92,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3E228CD17F7942E00E04609 /* SystemConfiguration.framework in Frameworks */,
+				E3E228CB17F7942500E04609 /* StoreKit.framework in Frameworks */,
+				E3E228C917F7941E00E04609 /* Security.framework in Frameworks */,
+				E3E228C717F7941200E04609 /* QuartzCore.framework in Frameworks */,
+				E3E228C517F7940000E04609 /* MobileCoreServices.framework in Frameworks */,
+				E3E228C317F793E100E04609 /* libz.1.1.3.dylib in Frameworks */,
+				E3E228C117F793CE00E04609 /* CoreLocation.framework in Frameworks */,
+				E3E228BF17F793BA00E04609 /* CFNetwork.framework in Frameworks */,
+				E3E228BD17F793B100E04609 /* AudioToolbox.framework in Frameworks */,
 				E34C342F17F0F9BD00E784DF /* CoreGraphics.framework in Frameworks */,
 				E34C343117F0F9BD00E784DF /* UIKit.framework in Frameworks */,
+				E3E228BB17F7934100E04609 /* Parse.framework in Frameworks */,
 				E34C342D17F0F9BD00E784DF /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -110,6 +143,16 @@
 		E34C342B17F0F9BD00E784DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E3E228CC17F7942E00E04609 /* SystemConfiguration.framework */,
+				E3E228CA17F7942500E04609 /* StoreKit.framework */,
+				E3E228C817F7941E00E04609 /* Security.framework */,
+				E3E228C617F7941200E04609 /* QuartzCore.framework */,
+				E3E228C417F7940000E04609 /* MobileCoreServices.framework */,
+				E3E228C217F793E100E04609 /* libz.1.1.3.dylib */,
+				E3E228C017F793CE00E04609 /* CoreLocation.framework */,
+				E3E228BE17F793BA00E04609 /* CFNetwork.framework */,
+				E3E228BC17F793B100E04609 /* AudioToolbox.framework */,
+				E3E228BA17F7934100E04609 /* Parse.framework */,
 				E34C342C17F0F9BD00E784DF /* Foundation.framework */,
 				E34C342E17F0F9BD00E784DF /* CoreGraphics.framework */,
 				E34C343017F0F9BD00E784DF /* UIKit.framework */,
@@ -124,6 +167,8 @@
 				E34C343B17F0F9BD00E784DF /* AppDelegate.h */,
 				E34C343C17F0F9BD00E784DF /* AppDelegate.m */,
 				E34C343E17F0F9BD00E784DF /* Main.storyboard */,
+				E3E228B717F4E4B300E04609 /* EditUserViewController.h */,
+				E3E228B817F4E4B300E04609 /* EditUserViewController.m */,
 				E34C346717F2230900E784DF /* MapViewController.h */,
 				E34C346817F2230900E784DF /* MapViewController.m */,
 				E34C346417F2198200E784DF /* NewUserNavViewController.h */,
@@ -268,6 +313,7 @@
 				E34C344317F0F9BD00E784DF /* ViewController.m in Sources */,
 				E34C343D17F0F9BD00E784DF /* AppDelegate.m in Sources */,
 				E34C346917F2230900E784DF /* MapViewController.m in Sources */,
+				E3E228B917F4E4B300E04609 /* EditUserViewController.m in Sources */,
 				E34C346617F2198200E784DF /* NewUserNavViewController.m in Sources */,
 				E34C343917F0F9BD00E784DF /* main.m in Sources */,
 			);
@@ -396,6 +442,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/patrickdunshee/Documents/skeem,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "skeem/skeem-Prefix.pch";
 				INFOPLIST_FILE = "skeem/skeem-Info.plist";
@@ -409,6 +459,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					/Users/patrickdunshee/Documents/skeem,
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "skeem/skeem-Prefix.pch";
 				INFOPLIST_FILE = "skeem/skeem-Info.plist";
@@ -478,6 +532,7 @@
 				E34C345D17F0F9BD00E784DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E34C345E17F0F9BD00E784DF /* Build configuration list for PBXNativeTarget "skeemTests" */ = {
 			isa = XCConfigurationList;
@@ -486,6 +541,7 @@
 				E34C346017F0F9BD00E784DF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

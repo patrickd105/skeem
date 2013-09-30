@@ -11,5 +11,8 @@
 @interface MainMenuViewController : UIViewController
 
 @property (strong, nonatomic) IBOutlet UIButton *viewMapButton;
+@property (strong, nonatomic) IBOutlet UIButton *editInfoButton;
+
+-(IBAction)doneSegue: (UIStoryboardSegue *) segue;
 
 @end
