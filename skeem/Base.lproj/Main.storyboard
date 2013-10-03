@@ -239,6 +239,9 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                                 <state key="normal" title="skeem">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="skeemButtonPressed:" destination="2ef-r9-eSi" eventType="touchUpInside" id="2gT-XQ-QQg"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g5N-aj-WpI">
                                 <rect key="frame" x="106" y="373" width="109" height="30"/>
@@ -256,6 +259,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA
                     <navigationItem key="navigationItem" id="aOP-D3-PaB"/>
                     <connections>
                         <outlet property="editInfoButton" destination="g5N-aj-WpI" id="LwF-jC-7hY"/>
+                        <outlet property="skeemButton" destination="xOO-Wj-45O" id="0eE-2Z-m5b"/>
                         <outlet property="viewMapButton" destination="1yi-1W-Br7" id="KOr-AW-Yuf"/>
                         <segue destination="6Lr-fa-wC2" kind="modal" identifier="mainNewSegue" id="xIb-XY-y3A"/>
                         <segue destination="SFZ-Ij-Z5r" kind="modal" identifier="mainMapSegue" id="w7e-Pd-4Yn"/>

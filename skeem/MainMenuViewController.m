@@ -11,11 +11,36 @@
 #import "NewUserNavViewController.h"
 #import <Parse/Parse.h>
 
+
 @interface MainMenuViewController ()
 
 @end
 
 @implementation MainMenuViewController
+
+
+
+//when the user hits the skeem button, to disable/enable skeem
+- (IBAction)skeemButtonPressed:(id)sender {
+    
+    //if skeem is enabled (1) turn it off and vice versa
+    if(self.skeemEnabled == 0)
+        self.skeemEnabled = 1;
+    else
+        self.skeemEnabled = 0;
+    
+    //if skeem is enabled, start repeating timed function to check location and update database
+    if(self.skeemEnabled == 1){
+        self.skeemTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startAfterInterval:) userInfo:@"Test string" repeats:YES];
+    }
+    //if skeem is disabled, invalidate and set skeemTimer to nil
+    else{
+        [self.skeemTimer invalidate];
+        self.skeemTimer = nil;
+    }
+    
+    
+}
 
 //this is the unwind segue from ViewController (New User screen)
 -(IBAction)doneSegue: (UIStoryboardSegue *) segue{
@@ -39,6 +64,14 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        //if skeemEnabled has not been initialized yet, initialize to zero
+        if(!self.skeemEnabled){
+            self.skeemEnabled = 0;
+        }
+        //if uninitialized, set timerSave to 1200.0 (20 minutes)
+        if(!self.timerSave){
+            self.timerSave = 10;
+        }
     }
     return self;
 }
@@ -56,10 +89,6 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *userSex = [defaults objectForKey:@"userSex"];
     NSDate *userDOB = [defaults objectForKey:@"userDOB"];
-    
-    PFObject *testObject = [PFObject objectWithClassName:@"TestObject"];
-    [testObject setObject:@"bar" forKey:@"foo"];
-    [testObject save];
     
     //check that both are instantiated. If not, go to new user screen
     if(!userSex || !userDOB){
