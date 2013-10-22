@@ -31,6 +31,22 @@
         NSData* data = [NSData dataWithContentsOfURL: googleRequestURL];
         [self performSelectorOnMainThread:@selector(fetchedData:) withObject:data waitUntilDone:YES];
     });
+    
+    //get bar closest to those coordinates
+    
+    //check Parse to see if that bar is in there
+    
+    //if bar is in Parse, check if user is already in that bar
+    
+    //if user is not associated with that bar, delete old Person entry
+    
+    //check if bar has any people
+    
+    //if bar has no people, delete Place entry
+    
+    //if bar is in Parse, insert new Person entry
+    
+    //if bar is not in Parse, create new Place entry then new Person entry
 }
 
 //this function is called when the Places request returns its results
@@ -80,73 +96,49 @@
         //NSArray to get results
         NSArray *userQueryResults;
         
-        //the actual query action
+        //the actual query
         userQueryResults = [postQuery findObjects];
         
-        //PFObject of entry from query
-        PFObject *placeEntry = [userQueryResults objectAtIndex:0];
+        NSLog(@"%@", [userQueryResults description]);
         
-        //check if user is already in system
-        if([userQueryResults count] == 0){
-            //user is not already in system. create Place entry
-            [self inputParseEntryId:placeId name:placeName lat:placeLatString lng:placeLngString];
-        }
-        else{
-            //user is already in system. check if they're at the same place
-            if([placeId isEqualToString:[placeEntry objectForKey:@"id"]]){
-                //the user is at the same place they already were. log it and done
-                NSLog(@"Equal!");
-            }
-            else{
-                //user has changed locations
-                //delete the previous entry
-                [placeEntry deleteEventually];
-                
-                //create new entry
-                [self inputParseEntryId:placeId name:placeName lat:placeLatString lng:placeLngString];
-            }
-        }
+        //add bar to Place table
+        // Create Post
+        PFObject *newPost = [PFObject objectWithClassName:@"Place"];
         
+        // Set text content
+        [newPost setObject:placeId forKey:@"id"];
+        [newPost setObject:placeName forKey:@"name"];
+        [newPost setObject:placeLatString forKey:@"geoLat"];
+        [newPost setObject:placeLngString forKey:@"getLng"];
+        
+        
+        // Create relationship
+        [newPost setObject:[PFUser currentUser] forKey:@"personId"];
+        //get then input user sex
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [newPost setObject:[defaults objectForKey:@"userSex"] forKey:@"personSex"];
+        //get then input user age
+        NSDate *userDOB = [defaults objectForKey:@"userDOB"];
+        NSDate* now = [NSDate date];
+        NSDateComponents* ageComponents = [[NSCalendar currentCalendar]
+                                           components:NSYearCalendarUnit
+                                           fromDate:userDOB
+                                           toDate:now
+                                           options:0];
+        NSInteger age = [ageComponents year];
+        [newPost setObject:[NSString stringWithFormat:@"%i", age] forKey:@"personDOB"];
+        
+        // Save the new post
+        [newPost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                // Dismiss the NewPostViewController and show the BlogTableViewController
+                NSLog(@"%@", @"Success! Now go check.");
+            }
+            else
+                NSLog(@"%@", [error localizedDescription]);
+        }];
     }
     
-}
-
--(void)inputParseEntryId:(NSString*)placeId name:(NSString*)placeName lat:(NSString*)placeLatString lng:(NSString*)placeLngString{
-    //add bar to Place table
-    // Create Post
-    PFObject *newPost = [PFObject objectWithClassName:@"Place"];
-    
-    // Set text content
-    [newPost setObject:placeId forKey:@"id"];
-    [newPost setObject:placeName forKey:@"name"];
-    PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:[placeLatString doubleValue] longitude:[placeLngString doubleValue]];
-    [newPost setObject:geoPoint forKey:@"geoPoint"];
-    
-    // Create relationship
-    [newPost setObject:[PFUser currentUser] forKey:@"personId"];
-    //get then input user sex
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [newPost setObject:[defaults objectForKey:@"userSex"] forKey:@"personSex"];
-    //get then input user age
-    NSDate *userDOB = [defaults objectForKey:@"userDOB"];
-    NSDate* now = [NSDate date];
-    NSDateComponents* ageComponents = [[NSCalendar currentCalendar]
-                                       components:NSYearCalendarUnit
-                                       fromDate:userDOB
-                                       toDate:now
-                                       options:0];
-    NSInteger age = [ageComponents year];
-    [newPost setObject:[NSString stringWithFormat:@"%i", age] forKey:@"personAge"];
-    
-    // Save the new post
-    [newPost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (!error) {
-            // Dismiss the NewPostViewController and show the BlogTableViewController
-            NSLog(@"%@", @"Success! Now go check.");
-        }
-        else
-            NSLog(@"%@", [error localizedDescription]);
-    }];
 }
 
 //this function is called every 2 minutes when skeem button is enabled
