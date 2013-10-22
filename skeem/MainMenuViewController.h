@@ -18,6 +18,7 @@
 
 {
     CLLocationManager *locationManager;
+    __block UIBackgroundTaskIdentifier bgTask;
 }
 
 @property (strong, nonatomic) IBOutlet UIButton *viewMapButton;

@@ -29,14 +29,21 @@
     else
         self.skeemEnabled = 0;
     
+    UIApplication *app = [UIApplication sharedApplication];
+    
     //if skeem is enabled, start repeating timed function to check location and update database
     if(self.skeemEnabled == 1){
-        self.skeemTimer = [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(startAfterInterval:) userInfo:@"Test string" repeats:YES];
+        bgTask = 0;
+        bgTask = [app beginBackgroundTaskWithExpirationHandler:^{
+            bgTask = UIBackgroundTaskInvalid;
+        }];
+        self.skeemTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(startAfterInterval:) userInfo:@"Test string" repeats:YES];
     }
     //if skeem is disabled, invalidate and set skeemTimer to nil
     else{
         [self.skeemTimer invalidate];
         self.skeemTimer = nil;
+        [app endBackgroundTask:bgTask];
     }
     
     

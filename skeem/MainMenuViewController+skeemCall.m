@@ -83,15 +83,14 @@
         //the actual query action
         userQueryResults = [postQuery findObjects];
         
-        //PFObject of entry from query
-        PFObject *placeEntry = [userQueryResults objectAtIndex:0];
-        
         //check if user is already in system
         if([userQueryResults count] == 0){
             //user is not already in system. create Place entry
             [self inputParseEntryId:placeId name:placeName lat:placeLatString lng:placeLngString];
         }
         else{
+            //PFObject of entry from query
+            PFObject *placeEntry = [userQueryResults objectAtIndex:0];
             //user is already in system. check if they're at the same place
             if([placeId isEqualToString:[placeEntry objectForKey:@"id"]]){
                 //the user is at the same place they already were. log it and done
