@@ -14,16 +14,23 @@
 #define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 
 
-@interface MainMenuViewController : UIViewController <CLLocationManagerDelegate>
+@interface MainMenuViewController : UIViewController <CLLocationManagerDelegate, NSFetchedResultsControllerDelegate>
 
 {
     CLLocationManager *locationManager;
     __block UIBackgroundTaskIdentifier bgTask;
+    
+    NSFetchedResultsController *fetchedResultsController;
+    NSManagedObjectContext *managedObjectContext;
 }
 
 @property (strong, nonatomic) IBOutlet UIButton *viewMapButton;
 @property (strong, nonatomic) IBOutlet UIButton *editInfoButton;
 @property (strong, nonatomic) IBOutlet UIButton *skeemButton;
+@property (strong, nonatomic) IBOutlet UILabel *skeeminLabel;
+
+@property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
 
 
 @property NSInteger skeemEnabled;

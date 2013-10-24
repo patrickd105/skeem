@@ -13,5 +13,6 @@
 -(void)skeemCall;
 -(void)startAfterInterval:(NSTimer*)timer;
 -(void)inputParseEntryId:(NSString*)placeId name:(NSString*)placeName lat:(NSString*)placeLatString lng:(NSString*)placeLngString;
+-(void)removeParseEntry;
 
 @end

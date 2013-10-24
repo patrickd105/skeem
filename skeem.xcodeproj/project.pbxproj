@@ -24,6 +24,9 @@
 		E34C346317F209E600E784DF /* MainMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C346217F209E600E784DF /* MainMenuViewController.m */; };
 		E34C346617F2198200E784DF /* NewUserNavViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C346517F2198200E784DF /* NewUserNavViewController.m */; };
 		E34C346917F2230900E784DF /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E34C346817F2230900E784DF /* MapViewController.m */; };
+		E39A2CFD18185F8300143BF5 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E39A2CFC18185F8300143BF5 /* CoreData.framework */; };
+		E39A2D00181860A100143BF5 /* PlaceHistoryModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E39A2CFE181860A100143BF5 /* PlaceHistoryModel.xcdatamodeld */; };
+		E39A2D03181994A300143BF5 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E39A2D02181994A300143BF5 /* HistoryViewController.m */; };
 		E3E228B917F4E4B300E04609 /* EditUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3E228B817F4E4B300E04609 /* EditUserViewController.m */; };
 		E3E228BB17F7934100E04609 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228BA17F7934100E04609 /* Parse.framework */; };
 		E3E228BD17F793B100E04609 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E3E228BC17F793B100E04609 /* AudioToolbox.framework */; };
@@ -75,6 +78,10 @@
 		E34C346517F2198200E784DF /* NewUserNavViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewUserNavViewController.m; sourceTree = "<group>"; };
 		E34C346717F2230900E784DF /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		E34C346817F2230900E784DF /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
+		E39A2CFC18185F8300143BF5 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		E39A2CFF181860A100143BF5 /* PlaceHistoryModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PlaceHistoryModel.xcdatamodel; sourceTree = "<group>"; };
+		E39A2D01181994A300143BF5 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
+		E39A2D02181994A300143BF5 /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
 		E3E228B717F4E4B300E04609 /* EditUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditUserViewController.h; sourceTree = "<group>"; };
 		E3E228B817F4E4B300E04609 /* EditUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditUserViewController.m; sourceTree = "<group>"; };
 		E3E228BA17F7934100E04609 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
@@ -97,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E39A2CFD18185F8300143BF5 /* CoreData.framework in Frameworks */,
 				E3E228D217FB591F00E04609 /* MapKit.framework in Frameworks */,
 				E3E228CD17F7942E00E04609 /* SystemConfiguration.framework in Frameworks */,
 				E3E228CB17F7942500E04609 /* StoreKit.framework in Frameworks */,
@@ -149,6 +157,7 @@
 		E34C342B17F0F9BD00E784DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E39A2CFC18185F8300143BF5 /* CoreData.framework */,
 				E3E228D117FB591E00E04609 /* MapKit.framework */,
 				E3E228CC17F7942E00E04609 /* SystemConfiguration.framework */,
 				E3E228CA17F7942500E04609 /* StoreKit.framework */,
@@ -171,9 +180,12 @@
 		E34C343217F0F9BD00E784DF /* skeem */ = {
 			isa = PBXGroup;
 			children = (
+				E39A2CFE181860A100143BF5 /* PlaceHistoryModel.xcdatamodeld */,
 				E34C343B17F0F9BD00E784DF /* AppDelegate.h */,
 				E34C343C17F0F9BD00E784DF /* AppDelegate.m */,
 				E34C343E17F0F9BD00E784DF /* Main.storyboard */,
+				E39A2D01181994A300143BF5 /* HistoryViewController.h */,
+				E39A2D02181994A300143BF5 /* HistoryViewController.m */,
 				E3E228CE17FA847D00E04609 /* MainMenuViewController+skeemCall.h */,
 				E3E228CF17FA847D00E04609 /* MainMenuViewController+skeemCall.m */,
 				E3E228B717F4E4B300E04609 /* EditUserViewController.h */,
@@ -320,6 +332,8 @@
 			files = (
 				E34C346317F209E600E784DF /* MainMenuViewController.m in Sources */,
 				E34C344317F0F9BD00E784DF /* ViewController.m in Sources */,
+				E39A2D00181860A100143BF5 /* PlaceHistoryModel.xcdatamodeld in Sources */,
+				E39A2D03181994A300143BF5 /* HistoryViewController.m in Sources */,
 				E3E228D017FA847D00E04609 /* MainMenuViewController+skeemCall.m in Sources */,
 				E34C343D17F0F9BD00E784DF /* AppDelegate.m in Sources */,
 				E34C346917F2230900E784DF /* MapViewController.m in Sources */,
@@ -554,6 +568,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		E39A2CFE181860A100143BF5 /* PlaceHistoryModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E39A2CFF181860A100143BF5 /* PlaceHistoryModel.xcdatamodel */,
+			);
+			currentVersion = E39A2CFF181860A100143BF5 /* PlaceHistoryModel.xcdatamodel */;
+			name = PlaceHistoryModel.xcdatamodeld;
+			path = ../PlaceHistoryModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = E34C342117F0F9BD00E784DF /* Project object */;
 }

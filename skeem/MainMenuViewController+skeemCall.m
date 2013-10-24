@@ -12,6 +12,7 @@
 
 //the actual database modification function
 - (void) skeemCall{
+    [locationManager startUpdatingLocation];
     //get current coordinates
     locationManager = [[CLLocationManager alloc] init];
     [locationManager setDelegate:self];
@@ -21,7 +22,7 @@
     
     // Build the url string to send to Google. NOTE: The kGOOGLE_API_KEY is a constant that should contain your own API key that you obtain from Google. See this link for more info:
         // https://developers.google.com/maps/documentation/places/#Authentication
-    NSString *url = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/search/json?location=%f,%f&types=%@&sensor=true&rankby=%@&key=%@", 32.798016, -96.80115, @"bar", @"distance", kGOOGLE_API_KEY];
+    NSString *url = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/search/json?location=%f,%f&types=%@&sensor=true&rankby=%@&key=%@", locationManager.location.coordinate.latitude, locationManager.location.coordinate.longitude, @"bar", @"distance", kGOOGLE_API_KEY];
     
     //Formulate the string as a URL object.
     NSURL *googleRequestURL=[NSURL URLWithString:url];
@@ -46,6 +47,8 @@
     //The results from Google will be an array obtained from the NSDictionary object with the key "results".
     NSArray* places = [json objectForKey:@"results"];
     
+    //check if any matches were returned
+    if([places count] != 0){
     //get the latitude/longitude, id, and name of the place
     NSString *placeLatString = [[[[places objectAtIndex:0] objectForKey:@"geometry"] objectForKey:@"location"] objectForKey:@"lat"];
     double placeLat = [placeLatString doubleValue];
@@ -56,7 +59,7 @@
     
     //get coordinates of the place that was found and the user's current location
     CLLocation *placeLoc = [[CLLocation alloc] initWithLatitude:placeLat longitude:placeLng];
-    CLLocation *currentPlace = [[CLLocation alloc] initWithLatitude:32.798016 longitude:-96.80115];
+    CLLocation *currentPlace = [[CLLocation alloc] initWithLatitude:locationManager.location.coordinate.latitude longitude:locationManager.location.coordinate.longitude];
     
     //get distance to place from current location
     CLLocationDistance currToPlace = [currentPlace distanceFromLocation:placeLoc];
@@ -65,8 +68,51 @@
     if(currToPlace > 50){
         //clear any previous Parse entries necessary (Person unless last entry, then Person and Place)
         NSLog(@"%@: %f", @"It's greater than 50 meters away", currToPlace);
+        [self removeParseEntry];
     }
     else{
+        //save the data locally first in core data
+        //save the new post to Core Data first
+        NSManagedObjectContext *context = [self managedObjectContext];
+        
+        
+        NSManagedObject *placeEntry = [NSEntityDescription
+                                       insertNewObjectForEntityForName:@"Place"
+                                       inManagedObjectContext:context];
+        [placeEntry setValue:placeName forKey:@"placeName"];
+        [placeEntry setValue:[NSDate date] forKey:@"time"];
+        [placeEntry setValue:[NSNumber numberWithDouble:[placeLatString doubleValue]]  forKey:@"geoLat"];
+        [placeEntry setValue:[NSNumber numberWithDouble:[placeLngString doubleValue]]  forKey:@"geoLng"];
+        NSError *error;
+        if (![context save:&error]) {
+            NSLog(@"Whoops, couldn't save: %@", [error localizedDescription]);
+        }
+        //get entries to check if there are too many
+        NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+        NSEntityDescription *entity = [NSEntityDescription
+                                       entityForName:@"Place" inManagedObjectContext:context];
+        [fetchRequest setEntity:entity];
+        NSArray *fetchedObjects = [context executeFetchRequest:fetchRequest error:&error];
+        
+        //check if there are too many entries, delete the oldest ones if so
+        while([fetchedObjects count] >= 50){
+            NSEntityDescription *entity = [NSEntityDescription entityForName:@"Place" inManagedObjectContext:managedObjectContext];
+            NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"time" ascending:YES]; // ascending YES = start with earliest date
+            NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+            NSError *error;
+            NSFetchRequest *request = [[NSFetchRequest alloc] init];
+            [request setEntity:entity];
+            [request setSortDescriptors:sortDescriptors];
+            [request setFetchLimit:1];
+            
+            NSArray *fetchResults = [managedObjectContext executeFetchRequest:request error:&error];
+            
+            //check just to make sure no error, then actually delete
+            if ([fetchResults count]>0)
+                [managedObjectContext deleteObject:[fetchResults objectAtIndex:0]];
+        }
+        
+        
         //first make it so currentUser is never nil (or it will crash)
         [PFUser enableAutomaticUser];
         
@@ -80,8 +126,13 @@
         //NSArray to get results
         NSArray *userQueryResults;
         
+        @try{
         //the actual query action
-        userQueryResults = [postQuery findObjects];
+            userQueryResults = [postQuery findObjects];
+        }
+        @catch (NSException *e) {
+            NSLog(@"%@", e);
+        }
         
         //check if user is already in system
         if([userQueryResults count] == 0){
@@ -98,8 +149,10 @@
             }
             else{
                 //user has changed locations
-                //delete the previous entry
-                [placeEntry deleteEventually];
+                for(PFObject *placeEntry in userQueryResults){
+                    //loop through and delete all table entries for that user
+                    [placeEntry deleteEventually];
+                }
                 
                 //create new entry
                 [self inputParseEntryId:placeId name:placeName lat:placeLatString lng:placeLngString];
@@ -107,9 +160,16 @@
         }
         
     }
+    }//end [places count] != 0
+    else{
+        //user is not close enough to any bar, clear Parse entries
+        NSLog(@"No bar found in places request.");
+        [self removeParseEntry];
+    }
     
 }
 
+//function to create and save a Parse object
 -(void)inputParseEntryId:(NSString*)placeId name:(NSString*)placeName lat:(NSString*)placeLatString lng:(NSString*)placeLngString{
     //add bar to Place table
     // Create Post
@@ -141,7 +201,8 @@
     [newPost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
             // Dismiss the NewPostViewController and show the BlogTableViewController
-            NSLog(@"%@", @"Success! Now go check.");
+            NSLog(@"%@", @"Parse object saved successfully.");
+            
         }
         else
             NSLog(@"%@", [error localizedDescription]);
@@ -150,6 +211,9 @@
 
 //this function is called every 2 minutes when skeem button is enabled
 - (void) startAfterInterval:(NSTimer*)timer {
+    //enable then disable the location manager so the application is not killed in the background
+    [locationManager startUpdatingLocation];
+    [locationManager stopUpdatingLocation];
     
     //if this is the first call of the cycle, execute database actions here
     if(self.timerSave == 10){
@@ -161,6 +225,35 @@
     if(self.timerSave <= 0)
         self.timerSave = 10;
     
+}
+
+//this function deletes the user's Parse entry from the table
+-(void)removeParseEntry{
+    //need to remove entry from Parse table
+    //first make it so currentUser is never nil (or it will crash)
+    [PFUser enableAutomaticUser];
+    
+    //check if user is in the table already
+    // Create a query
+    PFQuery *postQuery = [PFQuery queryWithClassName:@"Place"];
+    
+    // Follow relationship
+    [postQuery whereKey:@"personId" equalTo:[PFUser currentUser]];
+    
+    //NSArray to get results
+    NSArray *userQueryResults;
+    
+    //the actual query action
+    userQueryResults = [postQuery findObjects];
+    
+    //check if user is already in system
+    if([userQueryResults count] != 0){
+        //PFObject of entry from query
+        for(PFObject *placeEntry in userQueryResults){
+            //loop through and delete all table entries for that user
+            [placeEntry deleteEventually];
+        }
+    }
 }
 
 @end
