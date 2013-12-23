@@ -25,11 +25,25 @@
 - (IBAction)skeemButtonPressed:(id)sender {
     
     //if skeem is enabled (1) turn it off and vice versa
-    if(self.skeemEnabled == 0)
-        self.skeemEnabled = 1;
-    else
+    if(self.skeemEnabled == 0){
+        if([CLLocationManager locationServicesEnabled]){
+            self.skeemEnabled = 1;
+            [locationManager startUpdatingLocation];
+            self.skeeminLabel.text = @"You're skeemin!";
+        }
+        else{
+            //location services are disabled, can't do skeem function
+            UIAlertView *message = [[UIAlertView alloc] initWithTitle:@"Location Services Not Enabled" message:@"Location services are not enabled, so skeem can't work." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [message show];
+        }
+    }
+    else{
         self.skeemEnabled = 0;
+        [locationManager stopUpdatingLocation];
+        self.skeeminLabel.text = @"You're not skeemin...";
+    }
     
+    /*
     UIApplication *app = [UIApplication sharedApplication];
     
     //if skeem is enabled, start repeating timed function to check location and update database
@@ -56,9 +70,34 @@
         
         [app endBackgroundTask:bgTask];
     }
-    
+    */
     
 }
+ 
+//on location change, make a skeem call
+-(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
+    //get most recent location
+    CLLocation* userLoc = [locations lastObject];
+    
+    NSLog(@"didUpdateLocations called at %f, %f", userLoc.coordinate.latitude, userLoc.coordinate.longitude);
+    
+    
+    
+    NSLog(@"timesince: %f", [lastCallTime timeIntervalSinceNow]);
+    
+    //if lastCallTime has not been initialized, initialize to now, perform skeem call
+    if(lastCallTime == nil){
+        lastCallTime = [[NSDate alloc] init];
+        [self performSelector:@selector(skeemCall:) withObject:userLoc];
+    }
+    
+    //if it's been over 5 minutes, run it again!
+    if([lastCallTime timeIntervalSinceNow] < -600){
+        lastCallTime = [[NSDate alloc] init];
+        [self performSelector:@selector(skeemCall:) withObject:userLoc];
+    }
+}
+
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -115,6 +154,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+    
 	// Do any additional setup after loading the view.
     //set skeem label to indicate skeem state
     if(self.skeemEnabled == 0)
@@ -144,6 +188,14 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (IBAction)skeemOnPressed:(id)sender {
+    NSString *timeSince = [NSString stringWithFormat:@"%f", [lastCallTime timeIntervalSinceNow]];
+    
+    self.timeSinceLabel.text = timeSince;
+    
+}
+
 
 
 

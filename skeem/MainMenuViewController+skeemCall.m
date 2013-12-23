@@ -10,8 +10,10 @@
 
 @implementation MainMenuViewController (skeemCall)
 
+
 //the actual database modification function
-- (void) skeemCall{
+- (void) skeemCall:(CLLocation*) userLoc{
+    /*This section is deprecated, left for reference
     [locationManager startUpdatingLocation];
     //get current coordinates
     locationManager = [[CLLocationManager alloc] init];
@@ -20,9 +22,13 @@
     [locationManager setDistanceFilter:kCLDistanceFilterNone];
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     
-    // Build the url string to send to Google. NOTE: The kGOOGLE_API_KEY is a constant that should contain your own API key that you obtain from Google. See this link for more info:
+    // Build the url string to send to Google. NOTE: The kGOOGLE_API_KEY is a constant that should contain your own API key that you obtain from Google. See this link for more info: trophy room:32.797992, -96.801167
         // https://developers.google.com/maps/documentation/places/#Authentication
     NSString *url = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/search/json?location=%f,%f&types=%@&sensor=true&rankby=%@&key=%@", locationManager.location.coordinate.latitude, locationManager.location.coordinate.longitude, @"bar", @"distance", kGOOGLE_API_KEY];
+     */
+    NSString *url = [NSString stringWithFormat:@"https://maps.googleapis.com/maps/api/place/search/json?location=%f,%f&types=%@&sensor=true&rankby=%@&key=%@", userLoc.coordinate.latitude, userLoc.coordinate.longitude, @"bar", @"distance", kGOOGLE_API_KEY];
+    
+    NSLog(@"Lat: %f, Long: %f", userLoc.coordinate.latitude, userLoc.coordinate.longitude);
     
     //Formulate the string as a URL object.
     NSURL *googleRequestURL=[NSURL URLWithString:url];
@@ -30,12 +36,16 @@
     // Retrieve the results of the URL.
     dispatch_async(kBgQueue, ^{
         NSData* data = [NSData dataWithContentsOfURL: googleRequestURL];
-        [self performSelectorOnMainThread:@selector(fetchedData:) withObject:data waitUntilDone:YES];
+        [self performSelectorOnMainThread:@selector(fetchedData:) withObject:[NSArray arrayWithObjects:data, userLoc, nil] waitUntilDone:YES];
     });
 }
 
 //this function is called when the Places request returns its results
--(void)fetchedData:(NSData *)responseData {
+-(void)fetchedData:(NSArray *)responseDataAndLoc {
+    //separate array into location and NSData
+    NSData* responseData = [responseDataAndLoc objectAtIndex:0];
+    CLLocation* currentPlace = [responseDataAndLoc objectAtIndex:1];
+    
     //parse out the json data
     NSError* error;
     NSDictionary* json = [NSJSONSerialization
@@ -56,18 +66,18 @@
     double placeLng = [placeLngString doubleValue];
     NSString *placeId = [[places objectAtIndex:0] objectForKey:@"id"];
     NSString *placeName = [[places objectAtIndex:0] objectForKey:@"name"];
+    NSString *placeAddress = [[places objectAtIndex:0] objectForKey:@"vicinity"];
     
     //get coordinates of the place that was found and the user's current location
     CLLocation *placeLoc = [[CLLocation alloc] initWithLatitude:placeLat longitude:placeLng];
-    CLLocation *currentPlace = [[CLLocation alloc] initWithLatitude:locationManager.location.coordinate.latitude longitude:locationManager.location.coordinate.longitude];
     
     //get distance to place from current location
     CLLocationDistance currToPlace = [currentPlace distanceFromLocation:placeLoc];
     
     //if the place is too far away (>40 meters) for the user to viably be there
-    if(currToPlace > 50){
+    if(currToPlace > 100){
         //clear any previous Parse entries necessary (Person unless last entry, then Person and Place)
-        NSLog(@"%@: %f", @"It's greater than 50 meters away", currToPlace);
+        NSLog(@"%@: %f", @"It's greater than 100 meters away", currToPlace);
         [self removeParseEntry];
     }
     else{
@@ -137,7 +147,7 @@
         //check if user is already in system
         if([userQueryResults count] == 0){
             //user is not already in system. create Place entry
-            [self inputParseEntryId:placeId name:placeName lat:placeLatString lng:placeLngString];
+            [self inputParseEntryId:placeId name:placeName lat:placeLatString lng:placeLngString address:placeAddress];
         }
         else{
             //PFObject of entry from query
@@ -155,7 +165,7 @@
                 }
                 
                 //create new entry
-                [self inputParseEntryId:placeId name:placeName lat:placeLatString lng:placeLngString];
+                [self inputParseEntryId:placeId name:placeName lat:placeLatString lng:placeLngString address:placeAddress];
             }
         }
         
@@ -170,7 +180,7 @@
 }
 
 //function to create and save a Parse object
--(void)inputParseEntryId:(NSString*)placeId name:(NSString*)placeName lat:(NSString*)placeLatString lng:(NSString*)placeLngString{
+-(void)inputParseEntryId:(NSString*)placeId name:(NSString*)placeName lat:(NSString*)placeLatString lng:(NSString*)placeLngString address:(NSString *)placeAddress{
     //add bar to Place table
     // Create Post
     PFObject *newPost = [PFObject objectWithClassName:@"Place"];
@@ -178,6 +188,7 @@
     // Set text content
     [newPost setObject:placeId forKey:@"id"];
     [newPost setObject:placeName forKey:@"name"];
+    [newPost setObject:placeAddress forKey:@"placeAddress"];
     PFGeoPoint *geoPoint = [PFGeoPoint geoPointWithLatitude:[placeLatString doubleValue] longitude:[placeLngString doubleValue]];
     [newPost setObject:geoPoint forKey:@"geoPoint"];
     
@@ -195,7 +206,7 @@
                                        toDate:now
                                        options:0];
     NSInteger age = [ageComponents year];
-    [newPost setObject:[NSString stringWithFormat:@"%i", age] forKey:@"personAge"];
+    [newPost setObject:[NSString stringWithFormat:@"%li", (long)age] forKey:@"personAge"];
     
     // Save the new post
     [newPost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -209,7 +220,7 @@
     }];
 }
 
-//this function is called every 2 minutes when skeem button is enabled
+/*/this function is called every 2 minutes when skeem button is enabled DEPRECATED
 - (void) startAfterInterval:(NSTimer*)timer {
     //enable then disable the location manager so the application is not killed in the background
     [locationManager startUpdatingLocation];
@@ -226,6 +237,7 @@
         self.timerSave = 10;
     
 }
+ */
 
 //this function deletes the user's Parse entry from the table
 -(void)removeParseEntry{
@@ -243,11 +255,16 @@
     //NSArray to get results
     NSArray *userQueryResults;
     
-    //the actual query action
-    userQueryResults = [postQuery findObjects];
+    @try{
+        //the actual query action
+        userQueryResults = [postQuery findObjects];
+    }
+    @catch (NSException *e) {
+        NSLog(@"%@", e);
+    }
     
     //check if user is already in system
-    if([userQueryResults count] != 0){
+    if([userQueryResults count] > 0){
         //PFObject of entry from query
         for(PFObject *placeEntry in userQueryResults){
             //loop through and delete all table entries for that user

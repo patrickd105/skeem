@@ -19,6 +19,7 @@
 {
     CLLocationManager *locationManager;
     __block UIBackgroundTaskIdentifier bgTask;
+    NSDate *lastCallTime;
     
     NSFetchedResultsController *fetchedResultsController;
     NSManagedObjectContext *managedObjectContext;
@@ -28,6 +29,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *editInfoButton;
 @property (strong, nonatomic) IBOutlet UIButton *skeemButton;
 @property (strong, nonatomic) IBOutlet UILabel *skeeminLabel;
+@property (strong, nonatomic) IBOutlet UILabel *timeSinceLabel;
 
 @property (nonatomic, retain) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, retain) NSManagedObjectContext *managedObjectContext;
