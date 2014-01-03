@@ -95,6 +95,18 @@
     return cell;
 }
 
+//this is to link to Maps when user taps the place they were at
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    //get the cell
+    NSManagedObject *info = [historyArray objectAtIndex:indexPath.row];
+    NSString *thePlace = [info valueForKey:@"placeName"];
+    NSString *thePlaceFixed = [thePlace stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.apple.com/maps?q=%@", thePlaceFixed]]];
+    
+    NSLog(@"http://maps.apple.com/maps?q=%@", thePlaceFixed);
+}
+
 /*
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
