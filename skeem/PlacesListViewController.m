@@ -75,8 +75,18 @@
     
     cell.detailTextLabel.text = detailsString;
     
-    
     return cell;
+}
+
+//this is to link to Maps when user taps the place they were at
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSString *thePlace = [[placesList objectAtIndex:indexPath.row] objectAtIndex:0];
+    NSString *thePlaceFixed = [thePlace stringByReplacingOccurrencesOfString:@" " withString:@"+"];
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://maps.apple.com/maps?q=%@", thePlaceFixed]]];
+    
+    NSLog(@"http://maps.apple.com/maps?q=%@", thePlaceFixed);
 }
 
 //user pressed the back button
