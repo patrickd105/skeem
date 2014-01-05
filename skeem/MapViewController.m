@@ -7,6 +7,7 @@
 //
 
 #import "MapViewController.h"
+#import "PlacesListViewController.h"
 #import <Parse/Parse.h>
 
 @interface MapViewController ()
@@ -14,6 +15,8 @@
 @end
 
 @implementation MapViewController
+
+@synthesize placesList;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,6 +53,9 @@
     [locationManager setDistanceFilter:kCLDistanceFilterNone];
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     
+    //allocate placesList
+    placesList = [[NSMutableArray alloc] init];
+    
     //set firstLaunch to YES, indicating this is the first time the map is being opened
     firstLaunch = YES;
     
@@ -59,6 +65,9 @@
 
 //this method calls to the Parse database and starts making the points
 -(void)startPlotting{
+    //clear places list
+    [placesList removeAllObjects];
+    
     //create the main query we'll be using
     PFQuery *mainMapQuery = [PFQuery queryWithClassName:@"Place"];
     
@@ -69,7 +78,7 @@
     //now specify the query based on map position
     [mainMapQuery whereKey:@"geoPoint"
      nearGeoPoint:mapLocation
-          withinKilometers:currenDist];
+          withinKilometers:(currenDist/1000)];
     
     //run the query, send to plotPositions
     [mainMapQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
@@ -180,6 +189,19 @@
         placeCoord.latitude = [[geoPoints objectAtIndex:i] latitude];
         placeCoord.longitude = [[geoPoints objectAtIndex:i] longitude];
         
+        //calculate total guys and girls
+        int guys = 0;
+        int girls = 0;
+        for(int j = 0; j < [[ratios objectAtIndex:i] count]; j++){
+            if ([[[ratios objectAtIndex:i] objectAtIndex:j] isEqualToString:@"Male"]) {
+                guys++;
+            }
+            else{
+                girls++;
+            }
+        }
+        
+        /* this used to calculate the percent of guys, decided instead to use raw numbers
         //calculate ratio
         double percentGuys;
         double guys = 0;
@@ -198,47 +220,54 @@
         //if totPeople is 0, then don't plot anything. this is a just in case thing so we don't divide by 0 and break the universe
         if(totPeople != 0){
             percentGuys = guys/totPeople;
+         */
         
         
-            //calculate average age
-            NSNumber *averageAge;
-            NSNumber *totalAge = [[NSNumber alloc] initWithDouble:0];
-            for(int j = 0; j < [[averageAges objectAtIndex:i] count]; j++){
-                double tempNum = [totalAge doubleValue];
-                tempNum = tempNum + [[[averageAges objectAtIndex:i] objectAtIndex:j] doubleValue];
-                totalAge = [NSNumber numberWithDouble:tempNum];
-            }
-            averageAge = [NSNumber numberWithDouble:([totalAge doubleValue]/[[averageAges objectAtIndex:i] count])];
-        
-            NSLog(@"name: %@, lat: %f, long: %f, percentGuys: %f, averageAge: %@", name, placeCoord.latitude, placeCoord.longitude, percentGuys, averageAge);
-        
-            //Create and place a map point with the information just acquired
-            MapPoint *placeObject = [[MapPoint alloc] initWithName:name address:address coordinate:placeCoord percentGuys:percentGuys averageAge:averageAge];
-            [self.mapView addAnnotation:placeObject];
+        //calculate average age
+        NSNumber *averageAge;
+        NSNumber *totalAge = [[NSNumber alloc] initWithDouble:0];
+        for(int j = 0; j < [[averageAges objectAtIndex:i] count]; j++){
+            double tempNum = [totalAge doubleValue];
+            tempNum = tempNum + [[[averageAges objectAtIndex:i] objectAtIndex:j] doubleValue];
+            totalAge = [NSNumber numberWithDouble:tempNum];
         }
+        averageAge = [NSNumber numberWithDouble:([totalAge doubleValue]/[[averageAges objectAtIndex:i] count])];
+        
+        //add place to placesList in case user wants to view the list
+        NSArray *placeArray = [NSArray arrayWithObjects:name, [NSString stringWithFormat:@"%i", guys], [NSString stringWithFormat:@"%i", girls], averageAge, nil];
+        [placesList addObject:placeArray];
+        
+        NSLog(@"name: %@, lat: %f, long: %f, numGuys: %i, numGirls: %i, averageAge: %@", name, placeCoord.latitude, placeCoord.longitude, guys, girls, averageAge);
+        
+        //Create and place a map point with the information just acquired
+        MapPoint *placeObject = [[MapPoint alloc] initWithName:name address:address coordinate:placeCoord numGuys:guys numGirls: girls averageAge:averageAge];
+        [self.mapView addAnnotation:placeObject];
     }
     /*
-    // 2 - Loop through the array of places returned from the Google API.
-    for (int i=0; i<[data count]; i++) {
-        //Retrieve the NSDictionary object in each index of the array.
-        NSDictionary* place = [data objectAtIndex:i];
-        // 3 - There is a specific NSDictionary object that gives us the location info.
-        NSDictionary *geo = [place objectForKey:@"geometry"];
-        // Get the lat and long for the location.
-        NSDictionary *loc = [geo objectForKey:@"location"];
-        // 4 - Get your name and address info for adding to a pin.
-        NSString *name=[place objectForKey:@"name"];
-        NSString *vicinity=[place objectForKey:@"vicinity"];
-        // Create a special variable to hold this coordinate info.
-        CLLocationCoordinate2D placeCoord;
-        // Set the lat and long.
-        placeCoord.latitude=[[loc objectForKey:@"lat"] doubleValue];
-        placeCoord.longitude=[[loc objectForKey:@"lng"] doubleValue];
-        // 5 - Create a new annotation.
-        MapPoint *placeObject = [[MapPoint alloc] initWithName:name address:vicinity coordinate:placeCoord];
-        [self.mapView addAnnotation:placeObject];
-    }*/
+     // 2 - Loop through the array of places returned from the Google API.
+     for (int i=0; i<[data count]; i++) {
+     //Retrieve the NSDictionary object in each index of the array.
+     NSDictionary* place = [data objectAtIndex:i];
+     // 3 - There is a specific NSDictionary object that gives us the location info.
+     NSDictionary *geo = [place objectForKey:@"geometry"];
+     // Get the lat and long for the location.
+     NSDictionary *loc = [geo objectForKey:@"location"];
+     // 4 - Get your name and address info for adding to a pin.
+     NSString *name=[place objectForKey:@"name"];
+     NSString *vicinity=[place objectForKey:@"vicinity"];
+     // Create a special variable to hold this coordinate info.
+     CLLocationCoordinate2D placeCoord;
+     // Set the lat and long.
+     placeCoord.latitude=[[loc objectForKey:@"lat"] doubleValue];
+     placeCoord.longitude=[[loc objectForKey:@"lng"] doubleValue];
+     // 5 - Create a new annotation.
+     MapPoint *placeObject = [[MapPoint alloc] initWithName:name address:vicinity coordinate:placeCoord];
+     [self.mapView addAnnotation:placeObject];
+     }*/
+    
 }
+
+
 
 -(MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
     // Define your reuse identifier.
@@ -262,6 +291,25 @@
 //this method is called whenever the refresh button is tapped, refreshes the annotations
 - (IBAction)refreshButtonPressed:(id)sender {
     [self startPlotting];
+}
+
+//user pressed button to view places as a list instead of map
+- (IBAction)listButtonPressed:(id)sender {
+    //perform segue to Places List view
+    [self performSegueWithIdentifier:@"placesListSegue" sender:self];
+}
+
+//prepare for Segue to send data
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    // Make sure your segue name in storyboard is the same as this line
+    if ([[segue identifier] isEqualToString:@"placesListSegue"])
+    {
+        // Pass the managedObjectContext so destination can use Core Data
+        UINavigationController *navController = [segue destinationViewController];
+        PlacesListViewController *object1 = (PlacesListViewController *) navController.topViewController;
+        object1.placesList = self.placesList;
+    }
 }
 
 @end

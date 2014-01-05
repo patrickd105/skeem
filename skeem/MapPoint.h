@@ -14,7 +14,8 @@
     
     NSString *_name;
     NSString *_address;
-    double percentGuys;
+    int numGuys;
+    int numGirls;
     NSNumber *_averageAge;
     CLLocationCoordinate2D _coordinate;
     
@@ -22,12 +23,12 @@
 
 @property (copy) NSString *name;
 @property (copy) NSString *address;
-@property (nonatomic) double percentGirls;
-@property (nonatomic) double percentGuys;
+@property (nonatomic) int numGuys;
+@property (nonatomic) int numGirls;
 @property (copy) NSNumber *averageAge;
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 
 
-- (id)initWithName:(NSString*)name address:(NSString*)address coordinate:(CLLocationCoordinate2D)coordinate percentGuys:(double)percentGuys averageAge:(NSNumber*)averageAge;
+- (id)initWithName:(NSString*)name address:(NSString*)address coordinate:(CLLocationCoordinate2D)coordinate numGuys:(int)numGuys numGirls:(int)numGirls averageAge:(NSNumber*)averageAge;
 
 @end

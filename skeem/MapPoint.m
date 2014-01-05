@@ -12,15 +12,17 @@
 @synthesize name = _name;
 @synthesize address = _address;
 @synthesize coordinate = _coordinate;
-@synthesize percentGuys = _percentGuys;
+@synthesize numGuys = _numGuys;
+@synthesize numGirls = _numGirls;
 @synthesize averageAge = _averageAge;
 
--(id)initWithName:(NSString*)name address:(NSString*)address coordinate:(CLLocationCoordinate2D)coordinate percentGuys:(double)percentGuys averageAge:(NSNumber *)averageAge {
+-(id)initWithName:(NSString*)name address:(NSString*)address coordinate:(CLLocationCoordinate2D)coordinate numGuys:(int)numGuys numGirls:(int)numGirls averageAge:(NSNumber *)averageAge {
     if ((self = [super init])) {
         _name = [name copy];
         _address = [address copy];
         _coordinate = coordinate;
-        _percentGuys = percentGuys;
+        _numGuys = numGuys;
+        _numGirls = numGirls;
         _averageAge = averageAge;
         
     }
@@ -35,10 +37,11 @@
 }
 
 -(NSString *)subtitle {
-    //convert percentages to strings
-    NSString *percentGuysString = [NSString stringWithFormat:@"%f", _percentGuys];
+    //convert girl/guy numbers to strings
+    NSString *numGuysString = [NSString stringWithFormat:@"%i", _numGuys];
+    NSString *numGirlsString = [NSString stringWithFormat:@"%i", _numGirls];
     
-    NSArray *stringComponents = [NSArray arrayWithObjects:_address, percentGuysString, _averageAge, nil];
+    NSArray *stringComponents = [NSArray arrayWithObjects:_address, numGuysString, numGirlsString, _averageAge, nil];
     return [stringComponents componentsJoinedByString:@", "];
 }
 
